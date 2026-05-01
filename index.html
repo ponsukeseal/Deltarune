@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Jujutsu Kaisen-TensaiSachi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  overflow-x:hidden;
+
+  background:linear-gradient(270deg,#0f0f0f,#1a1a1a,#0f0f0f);
+  background-size:600% 600%;
+  animation:bgmove 20s infinite;
+}
+
+@keyframes bgmove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+h1{
+  margin-top:40px;
+  font-size:clamp(26px,6vw,36px);
+
+  text-shadow:
+  0 0 10px #1db954,
+  0 0 20px #1db954,
+  0 0 40px #1db954;
+}
+
+#playlist{
+  width:90%;
+  max-width:420px;
+  margin-top:25px;
+  backdrop-filter:blur(8px);
+  background:rgba(0,0,0,0.4);
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.song{
+  padding:16px;
+  border-bottom:1px solid #333;
+  cursor:pointer;
+  transition:0.25s;
+  font-size:clamp(14px,4vw,16px);
+}
+
+.song:hover{
+  background:#1db954;
+  padding-left:22px;
+}
+
+.active{
+  background:#1db954;
+}
+
+audio{
+  margin-top:30px;
+  width:90%;
+  max-width:420px;
+  filter:invert(1);
+}
+
+.controls{
+  margin-top:12px;
+}
+
+button{
+  background:#1db954;
+  border:none;
+  color:white;
+  padding:12px 20px;
+  margin:6px;
+  cursor:pointer;
+  border-radius:6px;
+  font-weight:bold;
+  transition:0.25s;
+}
+
+button:hover{
+  transform:scale(1.1);
+  box-shadow:
+  0 0 10px #1db954,
+  0 0 20px #1db954;
+}
+
+.particle{
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:#1db954;
+  border-radius:50%;
+  opacity:0.6;
+  animation:float 10s linear infinite;
+}
+
+@keyframes float{
+  from{transform:translateY(100vh);}
+  to{transform:translateY(-10vh);}
+}
+
+</style>
+
+</head>
+<body>
+
+<h1>S1–3 OP & END JJK</h1>
+
+<div id="playlist"></div>
+
+<audio id="player" controls></audio>
+
+<div class="controls">
+<button onclick="prevSong()">Previous</button>
+<button onclick="nextSong()">Next</button>
+</div>
+
+<script>
+
+const songs = [
+
+{file:"field.mp3", title:"Field Of Hopes And Dreams"},
+{file:"acybersworld.mp3", title:"A CYBER'S WORLD?"},
+{file:"tvworld.mp3", title:"TV WORLD"},
+{file:"waitingroom.mp3", title:"Waiting Room"},
+{file:"thirdsanctuary.mp3", title:"The Third Sanctuary"},
+{file:"fireplace.mp3", title:"Fireplace"},
+
+];
+
+let current = 0;
+const player = document.getElementById("player");
+const playlist = document.getElementById("playlist");
+
+function loadSongs(){
+songs.forEach((song,i)=>{
+  const div=document.createElement("div");
+  div.className="song";
+  div.innerText=song.title;
+  div.onclick=()=>playSong(i);
+  playlist.appendChild(div);
+});
+}
+
+function playSong(index){
+current=index;
+player.src=songs[current].file;
+player.play();
+updateActive();
+}
+
+function nextSong(){
+current=(current+1)%songs.length;
+playSong(current);
+}
+
+function prevSong(){
+current=(current-1+songs.length)%songs.length;
+playSong(current);
+}
+
+function updateActive(){
+document.querySelectorAll(".song").forEach((el,i)=>{
+el.classList.toggle("active",i===current);
+});
+}
+
+player.addEventListener("ended",nextSong);
+
+loadSongs();
+playSong(0);
+
+/* floating particles */
+
+for(let i=0;i<40;i++){
+  const p=document.createElement("div");
+  p.className="particle";
+  p.style.left=Math.random()*100+"vw";
+  p.style.animationDuration=(6+Math.random()*10)+"s";
+  document.body.appendChild(p);
+}
+
+</script>
+
+</body>
+</html>
